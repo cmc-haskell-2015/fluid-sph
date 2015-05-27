@@ -1,14 +1,16 @@
+-- | ???
 module FluidEngine where
+
 import Types
 import FluidConst
 import Kernel
 import Graphics.Gloss.Interface.Pure.Game
 
--- Вычисление сил
+-- | Вычисление сил.
 computeForce::[Particle] -> Point ->[Particle]
 computeForce f  g = (map (\x->compAcc  g x f) f)
 
-
+-- | ???
 denscomp::Particle -> Particle -> Float
 denscomp (Particle (x,y) _ _ _ _ _) (Particle (x1,y1) _ _ _ _ _)  = res
   where
@@ -17,6 +19,7 @@ denscomp (Particle (x,y) _ _ _ _ _) (Particle (x1,y1) _ _ _ _ _)  = res
     rq = (diffx * diffx + diffy * diffy)
     res = if rq <= getH*getH then (wpoly6 rq) else 0
 
+-- | ???
 compDensity ::Particle->[Particle]->Particle
 compDensity (Particle (x,y) b c d dens pres) fs = fig
   where
@@ -24,9 +27,11 @@ compDensity (Particle (x,y) b c d dens pres) fs = fig
     pr =  ( 1.5* ( sum1 - 998.0 ))
     fig = (Particle (x,y) b c d sum1 pr)
 
+-- | ???
 computeDensPres::[Particle]->[Particle]
 computeDensPres f1 = (map (\x ->compDensity x f1) f1)
 
+-- | ???
 acccomp::Particle -> Particle -> (Point,Point)
 acccomp (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (vx1,vy1) (ax1,ay1) dens1 pres1) = fig
   where
@@ -44,6 +49,7 @@ acccomp (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (vx1,vy
     f_vis = (f_vis1,f_vis2)
     fig =  (f_vis,f_pres)
 
+-- | ???
 tensionCalc::Particle -> Particle -> Float
 tensionCalc (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (vx1,vy1) (ax1,ay1) dens1 pres1) = ten
   where
@@ -52,6 +58,7 @@ tensionCalc (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (vx
     rq = (diffy * diffy + diffx * diffx)
     ten = if (( rq < getH*getH*1.3) && ( rq > 0 )) then (wvisclap rq)/dens1 else 0
 
+-- | ???
 tensionCalc2::Particle -> Particle -> Point
 tensionCalc2 (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (vx1,vy1) (ax1,ay1) dens1 pres1) = res
   where
@@ -63,6 +70,7 @@ tensionCalc2 (Particle (x,y) c (vx,vy) (ax,ay) dens pres) (Particle (x1,y1) _ (v
     res2 = (snd ten) / dens1
     res = (res1,res2)
 
+-- | ???
 compAcc::Point -> Particle->[Particle]->Particle
 compAcc (gx,gy) (Particle (x,y) c (vx,vy) (ax,ay) dens pres) fs = fig
   where
@@ -89,7 +97,7 @@ compAcc (gx,gy) (Particle (x,y) c (vx,vy) (ax,ay) dens pres) fs = fig
     acc = ((fst acc1),(snd acc1))
     fig =  (Particle (x,y) c (vx,vy) acc dens pres) 
 
-
+-- | ???
 collision::Wall ->Particle ->Point
 collision (Wall (x,y) _ _ _ (nx,ny)) (Particle (x1,y1) _ (vx,vy) (ax,ay) _ _) = res
   where
@@ -102,6 +110,7 @@ collision (Wall (x,y) _ _ _ (nx,ny)) (Particle (x1,y1) _ (vx,vy) (ax,ay) _ _) = 
     accy = wall_k*ny*dot+dampy
     res = if dot>0  then (accx,accy) else (0,0)
 
+-- | ???
 wallColl::[Wall] -> Particle -> Point
 wallColl ws (Particle (x,y) c (vx,vy) (ax,ay) dens pres) = part
   where
@@ -113,7 +122,7 @@ wallColl ws (Particle (x,y) c (vx,vy) (ax,ay) dens pres) = part
     accy = sum tmp2
     part = (ax+accx,ay+accy)
 
--- Применение сил
+-- | Применение сил.
 applyforce::Particle  -> [Wall] -> Float -> Particle
 applyforce (Particle (x,y) c (vx,vy) (ax,ay) dens pres) ws time = fig
   where
