@@ -3,6 +3,7 @@ module Types where
 
 import Graphics.Gloss.Interface.Pure.Game
 
+<<<<<<< Updated upstream
 -- | Геометрическая фигура с координатами центра, списком вершин и цветом.
 data Particle = Particle
   { pos       :: Point  -- ^ ???
@@ -21,6 +22,25 @@ data Wall = Wall
   , angle       :: Float  -- ^ ???
   , normal      :: Point  -- ^ ???
   }
+=======
+-- | Частица.
+data Particle = Particle { 
+                pos::Point,
+                figcolor::Color, 
+                velocity::Point, 
+                acceleration::Point, 
+                density::Float, 
+                pressure::Float
+}
+-- | Стена
+data Wall = Wall {
+            wallPos::Point,
+            linePath::Path,
+            wallColor::Color,
+            angle::Float,
+            normal::Point
+}
+>>>>>>> Stashed changes
 
 -- | Мир — множество частиц.
 data World = World
