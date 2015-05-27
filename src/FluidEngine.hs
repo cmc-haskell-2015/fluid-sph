@@ -1,24 +1,14 @@
--- | ???
 module FluidEngine where
-
 import Types
 import FluidConst
 import Kernel
 import Graphics.Gloss.Interface.Pure.Game
 
-<<<<<<< Updated upstream
--- | Вычисление сил.
-computeForce::[Particle] -> Point ->[Particle]
-computeForce f  g = (map (\x->compAcc  g x f) f)
-
--- | ???
-=======
 -- | Вычисление сил
 computeForce::[Particle] -> Point ->[Particle]
 computeForce f g = (map (\x -> compAcc  g x f) f)
 
 -- | Вычисление плотности для 2 частиц
->>>>>>> Stashed changes
 denscomp::Particle -> Particle -> Float
 denscomp (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ _ _)  = res
   where
@@ -27,15 +17,9 @@ denscomp (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ _ _)  = res
     rq = (diffx * diffx + diffy * diffy)
     res = if rq <= getH * getH then (wpoly6 rq) else 0
 
-<<<<<<< Updated upstream
--- | ???
-compDensity ::Particle->[Particle]->Particle
-compDensity (Particle (x,y) b c d dens pres) fs = fig
-=======
 -- | Вычисление плотности для всех частиц
 compDensity ::Particle -> [Particle] -> Particle
 compDensity (Particle (x , y) b c d dens pres) fs = fig
->>>>>>> Stashed changes
   where
     sum1 = (sum (map (denscomp (Particle (x , y) b c d dens pres)) fs)) * part_mass
     pr =  ( 1.5 * ( sum1 - 998.0 ))
@@ -45,16 +29,8 @@ compDensity (Particle (x , y) b c d dens pres) fs = fig
 computeDensPres::[Particle] -> [Particle]
 computeDensPres f1 = (map (\x -> compDensity x f1) f1)
 
-<<<<<<< Updated upstream
--- | ???
-computeDensPres::[Particle]->[Particle]
-computeDensPres f1 = (map (\x ->compDensity x f1) f1)
-
--- | ???
-=======
 
 -- | Вычисление силы давления и вязкости для 2 частиц
->>>>>>> Stashed changes
 acccomp::Particle -> Particle -> (Point,Point)
 acccomp (Particle (x , y) _ (vx , vy) _ _ pres) (Particle (x1 , y1) _ (vx1 , vy1) _ dens1 pres1) = fig
   where
@@ -71,12 +47,8 @@ acccomp (Particle (x , y) _ (vx , vy) _ _ pres) (Particle (x1 , y1) _ (vx1 , vy1
     f_vis = (f_vis1 , f_vis2)
     fig =  (f_vis , f_pres)
 
-<<<<<<< Updated upstream
--- | ???
-=======
 
 -- | Вычисление силы поверхностного натяжения для 2 частиц
->>>>>>> Stashed changes
 tensionCalc::Particle -> Particle -> Float
 tensionCalc (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ dens1 _) = ten
   where
@@ -85,11 +57,7 @@ tensionCalc (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ dens1 _) = te
     rq = (diffy * diffy + diffx * diffx)
     ten = if (( rq < getH * getH * 1.3) && ( rq > 0 )) then (wvisclap rq) / dens1 else 0
 
-<<<<<<< Updated upstream
--- | ???
-=======
 -- | Вспмогательная функция
->>>>>>> Stashed changes
 tensionCalc2::Particle -> Particle -> Point
 tensionCalc2 (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ dens1 _) = res
   where
@@ -101,15 +69,9 @@ tensionCalc2 (Particle (x , y) _ _ _ _ _) (Particle (x1 , y1) _ _ _ dens1 _) = r
     res2 = (snd ten) / dens1
     res = (res1 , res2)
 
-<<<<<<< Updated upstream
--- | ???
-compAcc::Point -> Particle->[Particle]->Particle
-compAcc (gx,gy) (Particle (x,y) c (vx,vy) (ax,ay) dens pres) fs = fig
-=======
 -- | Рассчет ускорения для частицы с учетом сил вязкости, давления и поверх. натяжения
 compAcc::Point -> Particle -> [Particle] -> Particle
 compAcc (gx , gy) (Particle (x , y) c (vx , vy) (ax , ay) dens pres) fs = fig
->>>>>>> Stashed changes
   where
     infig = (Particle (x , y) c (vx , vy) (ax , ay) dens pres)
     list = ( map ( \a -> acccomp infig a) fs)
@@ -131,21 +93,12 @@ compAcc (gx , gy) (Particle (x , y) c (vx , vy) (ax , ay) dens pres) fs = fig
     f_pres1 = ( sum ( map (fst) f_pres)) * part_mass * presCoef
     f_pres2 = (sum (map (snd) f_pres)) * part_mass * presCoef
     acc1 = (( f_pres1 + f_vis1 * 1 +gx + f_tension1),( f_pres2 + f_vis2 * 1 + gy + f_tension2))
-<<<<<<< Updated upstream
-    acc = ((fst acc1),(snd acc1))
-    fig =  (Particle (x,y) c (vx,vy) acc dens pres) 
-
--- | ???
-collision::Wall ->Particle ->Point
-collision (Wall (x,y) _ _ _ (nx,ny)) (Particle (x1,y1) _ (vx,vy) (ax,ay) _ _) = res
-=======
     acc = ((fst acc1) , (snd acc1))
     fig =  (Particle (x , y) c (vx , vy) acc dens pres) 
 
 -- | Вспомогательная функция для столкновеня со стенами
 collision::Wall -> Particle -> Point
 collision (Wall (x , y) _ _ _ (nx , ny)) (Particle (x1 , y1) _ (vx , vy) _ _ _) = res
->>>>>>> Stashed changes
   where
     diffx = x - x1
     diffy = y - y1
@@ -156,11 +109,7 @@ collision (Wall (x , y) _ _ _ (nx , ny)) (Particle (x1 , y1) _ (vx , vy) _ _ _) 
     accy = wall_k * ny * dot + dampy
     res = if dot > 0  then (accx , accy) else (0 , 0)
 
-<<<<<<< Updated upstream
--- | ???
-=======
 -- | Столновения со стенами
->>>>>>> Stashed changes
 wallColl::[Wall] -> Particle -> Point
 wallColl ws (Particle (x , y) c (vx , vy) (ax , ay) dens pres) = part
   where
@@ -172,7 +121,7 @@ wallColl ws (Particle (x , y) c (vx , vy) (ax , ay) dens pres) = part
     accy = sum tmp2
     part = (ax + accx , ay + accy)
 
--- | Применение сил.
+-- Применение сил
 applyforce::Particle  -> [Wall] -> Float -> Particle
 applyforce (Particle (x , y) c (vx , vy) (ax , ay) dens pres) ws time = fig
   where
@@ -180,10 +129,5 @@ applyforce (Particle (x , y) c (vx , vy) (ax , ay) dens pres) ws time = fig
     newpos = (x + vx * time + (fst acc) * time * time / 2 , y + vy * time + (snd acc) * time * time / 2)
     finalposx = fst newpos
     finalposy = snd newpos
-<<<<<<< Updated upstream
-    newvel =  (((finalposx-x)/time) , ((finalposy-y)/time))
-    fig = (Particle newpos c newvel acc dens pres)
-=======
     newvel =  (((finalposx - x) / time) , ((finalposy - y) / time))
     fig = (Particle newpos c newvel acc dens pres)
->>>>>>> Stashed changes

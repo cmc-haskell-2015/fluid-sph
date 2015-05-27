@@ -12,42 +12,22 @@ import Graphics.Gloss.Data.Vector (rotateV)
 import Graphics.Gloss.Interface.Pure.Game
 import Graphics.Gloss.Data.ViewPort
 
+
+       
 -- | Построить правильный многоугольник с радиусом 1.
 equilateral :: Int -> Path
 equilateral n = take n (iterate (rotateV a) (0 , 0.14))
   where
     a = 2 * pi / fromIntegral n
 
-<<<<<<< Updated upstream
--- | ???
-createFig::Point -> Int -> Particle
-createFig pos a = (Particle pos (makeColor 0 0 1 1) (0,0) (0,0) 0 0 )
-
--- | ???
-=======
 -- | Создает частицу в заданной позиции
 createFig::Point -> Particle
 createFig posit  = (Particle posit (makeColor 0 0 1 1) (0,0) (0,0) 0 0 )
 
 -- | Создает список частиц
->>>>>>> Stashed changes
 initpart::Int -> [Particle]
 initpart _ = [(createFig (x , y)) | x <- [100,125..(350)] , y <- [100,125..(350)] ]
 
-<<<<<<< Updated upstream
--- | ???
-createWall::Path -> Point -> Float -> Point -> Wall
-createWall p (x,y) f (nx,ny) = (Wall (x,y) p (makeColor 0 0 0 1) f (nx,ny))
-
--- | ???
-initWalls::Int -> [Wall]
-initWalls a = [(createWall [(0,0),(0,480)] (0,240) 0 (1,0)),(createWall [(640,0),(640,480)] (640,240) 180 (-1,0))
-                ,(createWall [(0,0),(640,0)] (320,0) 90 (0,1)),(createWall [(0,480),(640,480)] (320,480) 90 (0,-1))]
-
--- | Начальный мир без фигур с заданным генератором случайных чисел.
-initialWorld ::Int ->World
-initialWorld a = (World (initpart 10) (initWalls 4) 0 (0,-9.81) 1)
-=======
 -- | Создает стену с параметрами в указанной точке
 createWall::Path -> Point -> Float -> Point -> Wall
 createWall p (x , y) f (nx , ny)= (Wall (x , y) p (makeColor 0 0 0 1) f (nx , ny))
@@ -60,7 +40,6 @@ initWalls a = [(createWall [(0 , 0) , (0 , 480)] (0 , 240) 0 (1 , 0)) , (createW
 -- | Начальный мир с частицами и стенами
 initialWorld ::Int -> World
 initialWorld a = (World (initpart 10) (initWalls 4) 0 (0 , - 9.81) 1)
->>>>>>> Stashed changes
 
 -- | Отрисовка мира.
 drawWorld :: World -> Picture
@@ -68,19 +47,11 @@ drawWorld (World fs as a _ _) = fin
   where
     pics = pictures ((F.foldMap drawParticle (reverse fs)) : (F.foldMap drawWall(reverse as)) : [])
     fpics = applyViewPortToPicture view $ pics
-<<<<<<< Updated upstream
-    fin = pictures ((applyViewPortToPicture view1 $ (drawInfo fs)):fpics:[] )
-    view = ViewPort (-320,-240) a 1
-    view1 = ViewPort (-320,-240) 0 1
-
--- | ???
-=======
     fin = pictures ((applyViewPortToPicture view1 $ (drawInfo fs)) : fpics : [] )
     view = ViewPort ( - 320 , - 240) a 1
     view1 = ViewPort ( - 320 , - 240) 0 1
 
 -- | Вывод информации
->>>>>>> Stashed changes
 drawInfo :: [Particle] -> Picture
 drawInfo fs = pics 
   where
@@ -88,11 +59,7 @@ drawInfo fs = pics
     pic2 = translate (350) (450) (scale (0.15) (0.15) (text ("Press 'S' to stop/start simulation")))
     pics = pictures (pic1 : pic2 : [])
 
-<<<<<<< Updated upstream
--- | ???
-=======
 -- | Отрисовка стен
->>>>>>> Stashed changes
 drawWall ::Wall -> Picture
 drawWall (Wall _ path c _ _) = (color c (line path))
 
@@ -100,25 +67,15 @@ drawWall (Wall _ path c _ _) = (color c (line path))
 drawParticle :: Particle ->  Picture
 drawParticle (Particle (x , y) c _ _ _ _) = translate x y (scale 50 50 (color c ( thickCircle (radius * 0.02) 0.25)))
 
-<<<<<<< Updated upstream
--- | Добавить случайную фигуру в указанной точке.
-=======
 
 -- | Добавить частицу в указанной точке.
->>>>>>> Stashed changes
 addParticle :: Point -> World -> World
 addParticle posit (World fs s a g sp) = (World  (f : fs) s a g sp)
   where
-<<<<<<< Updated upstream
-    f = (createFig pos 15)
-
--- | ???
-=======
     f = (createFig posit)
 
 
 -- | Поворот "коробки" влево
->>>>>>> Stashed changes
 changeAngleL::World -> World
 changeAngleL (World a b angleW (gx,gy) s) = (World a b newangle grav s)
   where
@@ -128,23 +85,10 @@ changeAngleL (World a b angleW (gx,gy) s) = (World a b newangle grav s)
     gy1 = gx * (sin rot) + gy * (cos rot)
     grav = (gx1 , gy1)
 
-<<<<<<< Updated upstream
--- | ???
-=======
 -- | Поворот "коробки" вправо
->>>>>>> Stashed changes
 changeAngleR::World -> World
 changeAngleR (World a b angleW (gx , gy) s) = (World a b newangle grav s)
   where
-<<<<<<< Updated upstream
-    newangle = (angle - 2)
-    rot = -2/180*pi
-    gx1 = gx*(cos rot)-gy*(sin rot)
-    gy1 = gx*(sin rot)+gy*(cos rot)
-    grav = (gx1,gy1)
-
--- | ???
-=======
     newangle = (angleW - 2)
     rot = - 2 / 180 * pi
     gx1 = gx * (cos rot) - gy * (sin rot)
@@ -152,7 +96,6 @@ changeAngleR (World a b angleW (gx , gy) s) = (World a b newangle grav s)
     grav = (gx1 , gy1)
 
 -- | Пауза/Продолжить
->>>>>>> Stashed changes
 speedT::World -> World
 speedT (World a b angleW (gx , gy) s) = w
   where
@@ -168,28 +111,20 @@ handleWorld (EventKey (Char 'g' ) Down _ _) = defaultGrav
 handleWorld (EventKey (Char 's' ) Down _ _) = speedT
 handleWorld _ = id
 
--- | Обновление всех частиц.
+-- Обновление всех частиц
 updateAllPart::[Wall] -> Point -> Float -> [Particle] -> [Particle]
 updateAllPart ws g time part = map (\x -> applyforce x ws time) ( computeForce ( computeDensPres part) g)
 
--- | Обновление мира.
+-- Обновление мира
 updateWorld :: Float -> World -> World
 updateWorld time (World f s a g 1) = (World (updateAllPart s g (time * 4) f) s a g 1)
 updateWorld _ (World f s a g sp) = (World f s a g sp)
 
-<<<<<<< Updated upstream
--- | ???
-winH::Fractional a =>a
-winH = 480
-
--- | ???
-=======
 -- | Высота окнв
 winH::Fractional a =>a
 winH = 480
 
 -- | Ширина окна
->>>>>>> Stashed changes
 winW::Fractional a => a 
 winW = 640
 
