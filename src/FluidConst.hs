@@ -1,30 +1,31 @@
 module FluidConst where
 import Types
--- | Масса частицы
+
+-- | Масса частицы.
 part_mass::Fractional a => a
 part_mass = 0.03
 
--- | Коэффициент поверхностного натяжения
+-- | Коэффициент поверхностного натяжения.
 surfCoef::Fractional a => a
 surfCoef = 0.0006
 
--- | Коэффициент вязкости
+-- | Коэффициент вязкости.
 viscCoef::Fractional a => a
 viscCoef = 0.0003
 
--- | Коэффициент силы давления
+-- | Коэффициент силы давления.
 presCoef::Fractional a => a
 presCoef = - 0.003
 
--- | Отскок от стены
+-- | Отскок от стены.
 wall_k::Fractional a => a
 wall_k = 800
 
--- | Потеря энергии при отскоке
+-- | Потеря энергии при отскоке.
 wall_d::Fractional a => a
 wall_d = - 1
 
--- | Гравитация по-умолчанию
+-- | Гравитация по-умолчанию.
 defaultGrav::World -> World
 defaultGrav (World a b _ _ s) = (World a b angle1 (gx1,gy1) s)
   where
@@ -32,10 +33,10 @@ defaultGrav (World a b _ _ s) = (World a b angle1 (gx1,gy1) s)
     gy1 = - 9.81 
     angle1 = 0
 
--- | Радиус частицы
+-- | Радиус частицы.
 radius :: Fractional a => a
 radius = 4.0
 
--- | Коэффициент сглаживания
+-- | Коэффициент сглаживания.
 getH::Fractional a => a
 getH = 0.022

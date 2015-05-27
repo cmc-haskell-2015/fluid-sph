@@ -20,24 +20,24 @@ equilateral n = take n (iterate (rotateV a) (0 , 0.14))
   where
     a = 2 * pi / fromIntegral n
 
--- | Создает частицу в заданной позиции
+-- | Создает частицу в заданной позиции.
 createFig::Point -> Particle
 createFig posit  = (Particle posit (makeColor 0 0 1 1) (0,0) (0,0) 0 0 )
 
--- | Создает список частиц
+-- | Создает список частиц.
 initpart::Int -> [Particle]
 initpart _ = [(createFig (x , y)) | x <- [100,125..(350)] , y <- [100,125..(350)] ]
 
--- | Создает стену с параметрами в указанной точке
+-- | Создает стену с параметрами в указанной точке.
 createWall::Path -> Point -> Float -> Point -> Wall
 createWall p (x , y) f (nx , ny)= (Wall (x , y) p (makeColor 0 0 0 1) f (nx , ny))
 
--- | Создает список стен
+-- | Создает список стен.
 initWalls::Int -> [Wall]
 initWalls a = [(createWall [(0 , 0) , (0 , 480)] (0 , 240) 0 (1 , 0)) , (createWall [(640 , 0) , (640 , 480)] (640 , 240) 180 ( - 1 , 0))
                 , (createWall [(0 , 0) , (640 , 0)] (320 , 0) 90 (0 , 1)) , (createWall [(0 , 480) , (640 , 480)] (320 , 480) 90 (0 , - 1))]
 
--- | Начальный мир с частицами и стенами
+-- | Начальный мир с частицами и стенами.
 initialWorld ::Int -> World
 initialWorld a = (World (initpart 10) (initWalls 4) 0 (0 , - 9.81) 1)
 
@@ -51,7 +51,7 @@ drawWorld (World fs as a _ _) = fin
     view = ViewPort ( - 320 , - 240) a 1
     view1 = ViewPort ( - 320 , - 240) 0 1
 
--- | Вывод информации
+-- | Вывод информации.
 drawInfo :: [Particle] -> Picture
 drawInfo fs = pics 
   where
@@ -59,7 +59,7 @@ drawInfo fs = pics
     pic2 = translate (350) (450) (scale (0.15) (0.15) (text ("Press 'S' to stop/start simulation")))
     pics = pictures (pic1 : pic2 : [])
 
--- | Отрисовка стен
+-- | Отрисовка стен.
 drawWall ::Wall -> Picture
 drawWall (Wall _ path c _ _) = (color c (line path))
 
@@ -75,7 +75,7 @@ addParticle posit (World fs s a g sp) = (World  (f : fs) s a g sp)
     f = (createFig posit)
 
 
--- | Поворот "коробки" влево
+-- | Поворот "коробки" влево.
 changeAngleL::World -> World
 changeAngleL (World a b angleW (gx,gy) s) = (World a b newangle grav s)
   where
@@ -85,7 +85,7 @@ changeAngleL (World a b angleW (gx,gy) s) = (World a b newangle grav s)
     gy1 = gx * (sin rot) + gy * (cos rot)
     grav = (gx1 , gy1)
 
--- | Поворот "коробки" вправо
+-- | Поворот "коробки" вправо.
 changeAngleR::World -> World
 changeAngleR (World a b angleW (gx , gy) s) = (World a b newangle grav s)
   where
@@ -95,7 +95,7 @@ changeAngleR (World a b angleW (gx , gy) s) = (World a b newangle grav s)
     gy1 = gx * (sin rot) + gy * (cos rot)
     grav = (gx1 , gy1)
 
--- | Пауза/Продолжить
+-- | Пауза/Продолжить.
 speedT::World -> World
 speedT (World a b angleW (gx , gy) s) = w
   where
@@ -111,23 +111,24 @@ handleWorld (EventKey (Char 'g' ) Down _ _) = defaultGrav
 handleWorld (EventKey (Char 's' ) Down _ _) = speedT
 handleWorld _ = id
 
--- Обновление всех частиц
+-- Обновление всех частиц.
 updateAllPart::[Wall] -> Point -> Float -> [Particle] -> [Particle]
 updateAllPart ws g time part = map (\x -> applyforce x ws time) ( computeForce ( computeDensPres part) g)
 
--- Обновление мира
+-- Обновление мира.
 updateWorld :: Float -> World -> World
 updateWorld time (World f s a g 1) = (World (updateAllPart s g (time * 4) f) s a g 1)
 updateWorld _ (World f s a g sp) = (World f s a g sp)
 
--- | Высота окнв
+-- | Высота окна.
 winH::Fractional a =>a
 winH = 480
 
--- | Ширина окна
+-- | Ширина окна.
 winW::Fractional a => a 
 winW = 640
 
+-- * Основаня функция.
 main :: IO ()
 main = do
   play display bgColor fps (initialWorld 10) drawWorld handleWorld updateWorld
