@@ -4,8 +4,6 @@ import Types
 import FluidEngine
 import FluidConst
 
-import Control.Applicative
-
 import qualified Data.Foldable as F
 
 import Graphics.Gloss.Data.Vector (rotateV)
@@ -24,21 +22,21 @@ createFig::Point -> Particle
 createFig posit  = (Particle posit (makeColor 0 0 1 1) (0,0) (0,0) 0 0 )
 
 -- | Создает список частиц.
-initpart::Int -> [Particle]
-initpart _ = [(createFig (x , y)) | x <- [100,125..(350)] , y <- [100,125..(350)] ]
+initpart :: [Particle]
+initpart = [(createFig (x , y)) | x <- [100,125..(350)] , y <- [100,125..(350)] ]
 
 -- | Создает стену с параметрами в указанной точке.
 createWall::Path -> Point -> Float -> Point -> Wall
 createWall p (x , y) f (nx , ny)= (Wall (x , y) p (makeColor 0 0 0 1) f (nx , ny))
 
 -- | Создает список стен.
-initWalls::Int -> [Wall]
-initWalls a = [(createWall [(0 , 0) , (0 , 480)] (0 , 240) 0 (1 , 0)) , (createWall [(640 , 0) , (640 , 480)] (640 , 240) 180 ( - 1 , 0))
+initWalls :: [Wall]
+initWalls = [(createWall [(0 , 0) , (0 , 480)] (0 , 240) 0 (1 , 0)) , (createWall [(640 , 0) , (640 , 480)] (640 , 240) 180 ( - 1 , 0))
                 , (createWall [(0 , 0) , (640 , 0)] (320 , 0) 90 (0 , 1)) , (createWall [(0 , 480) , (640 , 480)] (320 , 480) 90 (0 , - 1))]
 
 -- | Начальный мир с частицами и стенами.
-initialWorld ::Int -> World
-initialWorld a = (World (initpart 10) (initWalls 4) 0 (0 , - 9.81) 1)
+initialWorld :: World
+initialWorld = (World initpart initWalls 0 (0 , - 9.81) 1)
 
 -- | Отрисовка мира.
 drawWorld :: World -> Picture
@@ -130,7 +128,7 @@ winW = 640
 -- | Основаня функция.
 main :: IO ()
 main = do
-  play display bgColor fps (initialWorld 10) drawWorld handleWorld updateWorld
+  play display bgColor fps initialWorld drawWorld handleWorld updateWorld
   where
     windowSize   = (750 , 550)
     windowOffset = (250 , 250)
