@@ -13,7 +13,6 @@ import Graphics.Gloss.Interface.Pure.Game
 import Graphics.Gloss.Data.ViewPort
 
 
-       
 -- | Построить правильный многоугольник с радиусом 1.
 equilateral :: Int -> Path
 equilateral n = take n (iterate (rotateV a) (0 , 0.14))
@@ -111,11 +110,11 @@ handleWorld (EventKey (Char 'g' ) Down _ _) = defaultGrav
 handleWorld (EventKey (Char 's' ) Down _ _) = speedT
 handleWorld _ = id
 
--- Обновление всех частиц.
+-- | Обновление всех частиц.
 updateAllPart::[Wall] -> Point -> Float -> [Particle] -> [Particle]
 updateAllPart ws g time part = map (\x -> applyforce x ws time) ( computeForce ( computeDensPres part) g)
 
--- Обновление мира.
+-- | Обновление мира.
 updateWorld :: Float -> World -> World
 updateWorld time (World f s a g 1) = (World (updateAllPart s g (time * 4) f) s a g 1)
 updateWorld _ (World f s a g sp) = (World f s a g sp)
@@ -128,7 +127,7 @@ winH = 480
 winW::Fractional a => a 
 winW = 640
 
--- * Основаня функция.
+-- | Основаня функция.
 main :: IO ()
 main = do
   play display bgColor fps (initialWorld 10) drawWorld handleWorld updateWorld

@@ -121,7 +121,7 @@ wallColl ws (Particle (x , y) c (vx , vy) (ax , ay) dens pres) = part
     accy = sum tmp2
     part = (ax + accx , ay + accy)
 
--- Применение сил.
+-- | Применение сил.
 applyforce::Particle  -> [Wall] -> Float -> Particle
 applyforce (Particle (x , y) c (vx , vy) (ax , ay) dens pres) ws time = fig
   where
